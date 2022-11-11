@@ -112,17 +112,17 @@ def train(opt):
         next_prediction_batch = torch.max(next_prediction_batch, 1).values.reshape(-1, 1)
         done_batch = torch.tensor(done_batch).reshape(-1, 1)
 
-        assert (q_values.shape == next_prediction_batch.shape)
-        assert (q_values.shape == done_batch.shape)
-        assert (q_values.shape == reward_batch.shape)
-        assert (q_values.shape == torch.Size([512, 1]))
+        # assert (q_values.shape == next_prediction_batch.shape)
+        # assert (q_values.shape == done_batch.shape)
+        # assert (q_values.shape == reward_batch.shape)
+        # assert (q_values.shape == torch.Size([1024, 1]))
         # print(reward_batch.reshape(-1))
         # print(done_batch.reshape(-1))
         # print(next_prediction_batch.reshape(-1))
         tmp = tuple(reward if done else reward + opt.gamma * prediction for reward, done, prediction in
                     zip(reward_batch, done_batch, next_prediction_batch))
-        for i in range(len(tmp)):
-            assert isinstance(tmp[i], torch.Tensor)
+        # for i in range(len(tmp)):
+        #     assert isinstance(tmp[i], torch.Tensor)
         y_batch = torch.cat(tmp)[:, None]
 
         optimizer.zero_grad()
