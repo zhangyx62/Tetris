@@ -20,11 +20,13 @@ class DeepQNetwork(nn.Module):
 
         self.net = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(200, 256),
+            nn.Linear(200, 512),
             nn.ReLU(),
-            nn.Linear(256, 256),
+            nn.Linear(512, 512),
             nn.ReLU(),
-            nn.Linear(256, 40),
+            nn.Linear(512, 512),
+            nn.ReLU(),
+            nn.Linear(512, 40),
         )
         self._create_weights()
 
