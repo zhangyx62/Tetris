@@ -24,7 +24,7 @@ def get_args():
     parser.add_argument("--lr", type=float, default=1e-5)
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--initial_epsilon", type=float, default=1)
-    parser.add_argument("--final_epsilon", type=float, default=1e-3)
+    parser.add_argument("--final_epsilon", type=float, default=1e-2)
     parser.add_argument("--num_decay_epochs", type=float, default=100000)
     parser.add_argument("--num_epochs", type=int, default=300000)
     parser.add_argument("--save_interval", type=int, default=10000)
