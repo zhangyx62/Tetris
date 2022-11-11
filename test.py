@@ -20,7 +20,7 @@ def get_args():
 
 
 def test(opt):
-    device = 'mps'
+    device = torch.device('cuda' if torch.cuda.is_available() else 'mps')
     torch.manual_seed(123)
     model = torch.load(opt.saved_path)
     model.eval()

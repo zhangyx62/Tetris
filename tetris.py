@@ -229,7 +229,6 @@ class Tetris:
     def get_simple_image(self):
         img = [(p != 0) for row in self.get_current_board_state() for p in row]
         img = torch.tensor(img).reshape((self.height, self.width)).float()
-        device = 'mps'
-        img = img.reshape(1, 20, 10).to(device)
+        img = img.reshape(1, 20, 10)
         # self.output(img)
         return img

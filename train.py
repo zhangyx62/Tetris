@@ -37,7 +37,7 @@ def get_args():
 
 
 def train(opt):
-    device = 'mps'
+    device = torch.device('cuda' if torch.cuda.is_available() else 'mps')
     if os.path.isdir(opt.log_path):
         shutil.rmtree(opt.log_path)
     os.makedirs(opt.log_path)
