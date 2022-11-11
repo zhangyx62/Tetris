@@ -27,7 +27,7 @@ def get_args():
     parser.add_argument("--num_decay_epochs", type=float, default=30000)
     parser.add_argument("--num_epochs", type=int, default=300000)
     parser.add_argument("--save_interval", type=int, default=5000)
-    parser.add_argument("--replay_memory_size", type=int, default=50000,
+    parser.add_argument("--replay_memory_size", type=int, default=51200,
                         help="Number of epoches between testing phases")
     parser.add_argument("--log_path", type=str, default="tensorboard")
     parser.add_argument("--saved_path", type=str, default="trained_models")
@@ -111,9 +111,15 @@ def train(opt):
         next_prediction_batch = torch.max(next_prediction_batch, 1).values.reshape(-1, 1)
         done_batch = torch.tensor(done_batch).reshape(-1, 1)
 
-        y_batch = torch.cat(
-            tuple(reward if done else reward + opt.gamma * prediction for reward, done, prediction in
-                  zip(reward_batch, done_batch, next_prediction_batch)))[:, None]
+        assert (q_values.shape == next_prediction_batch.shape)
+        assert (q_values.shape == done_batch.shape)
+        assert (q_values.shape == reward_batch.shape)
+        assert (q_values.shape == torch.Size([512, 1]))
+        tmp = tuple(reward if done else reward + opt.gamma * prediction for reward, done, prediction in
+                    zip(reward_batch, done_batch, next_prediction_batch))
+        for i in range(len(tmp)):
+            assert isinstance(tmp[i], torch.Tensor)
+        y_batch = torch.cat(tmp)[:, None]
 
         optimizer.zero_grad()
         loss = criterion(q_values, y_batch)
