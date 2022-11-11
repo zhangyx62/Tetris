@@ -24,7 +24,7 @@ def get_args():
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--initial_epsilon", type=float, default=1)
     parser.add_argument("--final_epsilon", type=float, default=1e-3)
-    parser.add_argument("--num_decay_epochs", type=float, default=30000)
+    parser.add_argument("--num_decay_epochs", type=float, default=3000)
     parser.add_argument("--num_epochs", type=int, default=300000)
     parser.add_argument("--save_interval", type=int, default=5000)
     parser.add_argument("--replay_memory_size", type=int, default=51200,
@@ -123,7 +123,8 @@ def train(opt):
         for i in range(len(tmp)):
             assert isinstance(tmp[i], torch.Tensor)
         y_batch = torch.cat(tmp)[:, None]
-        print((y_batch - q_values).reshape(-1))
+        print((y_batch).reshape(-1)[:10])
+        print((y_batch - q_values).reshape(-1)[:10])
 
         optimizer.zero_grad()
         loss = criterion(q_values, y_batch)
