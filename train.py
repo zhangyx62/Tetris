@@ -115,14 +115,15 @@ def train(opt):
         assert (q_values.shape == done_batch.shape)
         assert (q_values.shape == reward_batch.shape)
         assert (q_values.shape == torch.Size([512, 1]))
-        print(reward_batch.reshape(-1))
-        print(done_batch.reshape(-1))
-        print(next_prediction_batch.reshape(-1))
+        # print(reward_batch.reshape(-1))
+        # print(done_batch.reshape(-1))
+        # print(next_prediction_batch.reshape(-1))
         tmp = tuple(reward if done else reward + opt.gamma * prediction for reward, done, prediction in
                     zip(reward_batch, done_batch, next_prediction_batch))
         for i in range(len(tmp)):
             assert isinstance(tmp[i], torch.Tensor)
         y_batch = torch.cat(tmp)[:, None]
+        print((y_batch - q_values).reshape(-1))
 
         optimizer.zero_grad()
         loss = criterion(q_values, y_batch)
