@@ -109,6 +109,7 @@ def train(opt):
         model.train()
 
         next_prediction_batch = torch.max(next_prediction_batch, 1).values.reshape(-1, 1)
+        done_batch = done_batch.reshape(-1, 1)
 
         y_batch = torch.cat(
             tuple(reward if done else reward + opt.gamma * prediction for reward, done, prediction in
