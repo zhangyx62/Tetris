@@ -31,6 +31,15 @@ def test(opt):
                           (int(1.5 * opt.width * opt.block_size), opt.height * opt.block_size))
     while True:
         state = env.get_simple_image().to(device)
+        # print('----------')
+        # for y in range(state.shape[1]):
+        #     for x in range(state.shape[2]):
+        #         if state[0, y, x] == 0:
+        #             print(' ', end='')
+        #         else:
+        #             print('#', end='')
+        #     print()
+        # print('----------')
         with torch.no_grad():
             predictions = model(state[None, :])[0]
         action = torch.argmax(predictions).item()
