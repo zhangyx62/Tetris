@@ -103,7 +103,6 @@ def train(opt):
         next_state_batch = next_state_batch.to(device)
 
         q_values = model(state_batch)
-        print(action_batch.reshape(-1))
         q_values = q_values.gather(1, action_batch)
         model.eval()
         with torch.no_grad():
