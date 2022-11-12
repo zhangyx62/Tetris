@@ -1,24 +1,50 @@
 
 
-def train():
-    initialization env, model, gamma, loss, optimizer
-    initialization replay_memory
+def train():  #伪代码
+    initialization env, model, gamma, loss, optimizer, prob
+    initialization replay_memory # FIFO队列
     while epoch < maxepoch:
-	    state = 从env中获取当前state
-        next_actions, next_states = 从env中获取所有可能的action和操作后的结果
-        predictions = model(next_states)
-	    action = epsilon_greedy(next_actions,predictions)
-	    next_state, reward, done = 在env中执行动作action
-	    replay_memory.append(state, reward, next_state, done)
-	    if !done: continue
+	    state = env.get_state() #获取当前状态
+        next_actions, next_states = env.get_all_action_and_result_state() # 获取所有可能的动作和对应的状态
+        predictions = model(next_states) # 预测所有后续状态的V值
+        prob = get_prob(epoch) # epoch较小时，prob较大，随着epoch增大，prob逐渐减小
+	    action = epsilon_greedy(next_actions,predictions,prob) # prob概率随机选择
+	    next_state, reward, done = env.execute(action) # 执行动作，获取下一个状态，奖励，是否结束
+	    replay_memory.append(state, reward, next_state, done) # FIFO队列
+	    if !done: continue # 如果未结束，继续执行
 
         epoch += 1
-        state_batch, reward_batch, next_state_batch, done_batch = sample(replay_memory)
-        q_values = model(state_batch)
+        state_batch, reward_batch, next_state_batch, done_batch = sample(replay_memory) # 从replay_memory中随机采样
+        values = model(state_batch) # 预测当前状态的V值
         next_prediction_batch = model(next_state_batch) # 不计算梯度
 	    y_batch = reward_batch + gamma * next_prediction_batch #对于done==True样本，只计算reward
 
-        loss = criterion(q_values, y_batch)
+        loss = criterion(values, y_batch)
         loss.backward()
         optimizer.step()
+
+
+
+def train():  #伪代码
+    initialization env, model, gamma, loss, optimizer, prob
+    initialization replay_memory # FIFO队列
+    while epoch < maxepoch:
+	    state = env.get_state() #获取当前状态
+        predictions = model(next_states) # 预测所有Q(s,a)值
+        prob = get_prob(epoch) # epoch较小时，prob较大，随着epoch增大，prob逐渐减小
+	    action = epsilon_greedy(predictions,prob) # prob概率随机选择
+	    next_state, reward, done = env.execute(action) # 执行动作，获取下一个状态，奖励，是否结束
+	    replay_memory.append(state, reward, next_state, done) # FIFO队列
+	    if !done: continue # 如果未结束，继续执行
+
+        epoch += 1
+        state_batch, reward_batch, next_state_batch, done_batch = sample(replay_memory) # 从replay_memory中随机采样
+        values = model(state_batch).gather(1, action_batch) # 预测当前状态的Q值
+        next_prediction_batch = model(next_state_batch).max(1).values # 不计算梯度
+	    y_batch = reward_batch + gamma * next_prediction_batch #对于done==True样本，只计算reward
+
+        loss = criterion(values, y_batch)
+        loss.backward()
+        optimizer.step()
+
 

@@ -11,7 +11,7 @@ def get_args():
     parser.add_argument("--width", type=int, default=10, help="The common width for all images")
     parser.add_argument("--height", type=int, default=20, help="The common height for all images")
     parser.add_argument("--block_size", type=int, default=30, help="Size of a block")
-    parser.add_argument("--fps", type=int, default=30, help="frames per second")
+    parser.add_argument("--fps", type=int, default=60, help="frames per second")
     parser.add_argument("--saved_path", type=str, default="trained_models")
     parser.add_argument("--output", type=str, default="output.mp4")
 
@@ -21,7 +21,7 @@ def get_args():
 
 def test(opt):
     device = torch.device('cuda' if torch.cuda.is_available() else 'mps')
-    model = torch.load('trained_models/tetris_60000', map_location=torch.device('cpu')).to(device)
+    model = torch.load('trained_models/tetris_110000', map_location=torch.device('cpu')).to(device)
     model.eval()
     env = Tetris(width=opt.width, height=opt.height, block_size=opt.block_size)
     env.reset()
