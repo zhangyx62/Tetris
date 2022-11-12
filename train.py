@@ -21,11 +21,11 @@ def get_args():
     parser.add_argument("--height", type=int, default=20, help="The common height for all images")
     parser.add_argument("--block_size", type=int, default=30, help="Size of a block")
     parser.add_argument("--batch_size", type=int, default=1024, help="The number of images per batch")
-    parser.add_argument("--lr", type=float, default=1e-5)
+    parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--initial_epsilon", type=float, default=1)
     parser.add_argument("--final_epsilon", type=float, default=1e-2)
-    parser.add_argument("--num_decay_epochs", type=float, default=50000)
+    parser.add_argument("--num_decay_epochs", type=float, default=5000)
     parser.add_argument("--num_epochs", type=int, default=200000)
     parser.add_argument("--save_interval", type=int, default=10000)
     parser.add_argument("--replay_memory_size", type=int, default=102400,

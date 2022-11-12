@@ -21,8 +21,7 @@ def get_args():
 
 def test(opt):
     device = torch.device('cuda' if torch.cuda.is_available() else 'mps')
-    torch.manual_seed(123)
-    model = torch.load('trained_models/tetris_10000', map_location=torch.device('cpu')).to(device)
+    model = torch.load('trained_models/tetris_60000', map_location=torch.device('cpu')).to(device)
     model.eval()
     env = Tetris(width=opt.width, height=opt.height, block_size=opt.block_size)
     env.reset()
@@ -31,15 +30,15 @@ def test(opt):
                           (int(1.5 * opt.width * opt.block_size), opt.height * opt.block_size))
     while True:
         state = env.get_simple_image().to(device)
-        print('----------')
-        for y in range(state.shape[1]):
-            for x in range(state.shape[2]):
-                if state[0, y, x] == 0:
-                    print(' ', end='')
-                else:
-                    print('#', end='')
-            print()
-        print('----------')
+        # print('----------')
+        # for y in range(state.shape[1]):
+        #     for x in range(state.shape[2]):
+        #         if state[0, y, x] == 0:
+        #             print(' ', end='')
+        #         else:
+        #             print('#', end='')
+        #     print()
+        # print('----------')
         with torch.no_grad():
             predictions = model(state[None, :])[0]
         action = torch.argmax(predictions).item()
