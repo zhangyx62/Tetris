@@ -13,6 +13,10 @@ class DeepQNetwork(nn.Module):
             nn.ReLU(),
         )
         self.conv3 = nn.Sequential(
+            nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+        )
+        self.conv4 = nn.Sequential(
             nn.Conv2d(256, 512, kernel_size=3, stride=2, padding=1),
             nn.ReLU(),
         )
@@ -44,6 +48,7 @@ class DeepQNetwork(nn.Module):
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.conv3(x)
+        x = self.conv4(x)
         x = self.fc1(x)
         #
         # x = self.net(x)
