@@ -122,14 +122,14 @@ def train(opt):
         loss.backward()
         optimizer.step()
 
-        print("Epoch: {}/{}, Action: {}, Score: {}, Tetrominoes {}, Cleared lines: {}, Average score: {}".format(
+        print("\rEpoch: {:6}/{}, Score: {:4}, Cleared lines: {:4}, Average score: {:8}".format(
             epoch,
             opt.num_epochs,
-            action,
             final_score,
-            final_tetrominoes,
             final_cleared_lines,
-            format(aver, '.2f')))
+            format(aver, '.2f')), end="")
+        if epoch % 1000 == 0:
+            print()
         writer.add_scalar('Train/Score', final_score, epoch - 1)
         writer.add_scalar('Train/Tetrominoes', final_tetrominoes, epoch - 1)
         writer.add_scalar('Train/Cleared lines', final_cleared_lines, epoch - 1)
