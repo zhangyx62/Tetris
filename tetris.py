@@ -218,17 +218,19 @@ class Tetris:
         cv2.waitKey(1)
 
     def output(self, img):
+        print("----------")
         for row in img:
             for p in row:
                 if p:
-                    print("██", end="")
+                    print("#", end="")
                 else:
-                    print("  ", end="")
+                    print(".", end="")
             print()
+        print("----------")
 
     def get_simple_image(self):
         img = [(p != 0) for row in self.get_current_board_state() for p in row]
         img = torch.tensor(img).reshape((self.height, self.width)).float()
         img = img.reshape(1, 20, 10)
-        # self.output(img)
+        # self.output(img[0])
         return img
