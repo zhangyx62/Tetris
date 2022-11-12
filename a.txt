@@ -1,0 +1,24 @@
+
+
+def train():
+    initialization env, model, gamma, loss, optimizer
+    initialization replay_memory
+    while epoch < maxepoch:
+	    state = 从env中获取当前state
+        next_actions, next_states = 从env中获取所有可能的action和操作后的结果
+        predictions = model(next_states)
+	    action = epsilon_greedy(next_actions,predictions)
+	    next_state, reward, done = 在env中执行动作action
+	    replay_memory.append(state, reward, next_state, done)
+	    if !done: continue
+
+        epoch += 1
+        state_batch, reward_batch, next_state_batch, done_batch = sample(replay_memory)
+        q_values = model(state_batch)
+        next_prediction_batch = model(next_state_batch) # 不计算梯度
+	    y_batch = reward_batch + gamma * next_prediction_batch #对于done==True样本，只计算reward
+
+        loss = criterion(q_values, y_batch)
+        loss.backward()
+        optimizer.step()
+
