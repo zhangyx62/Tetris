@@ -25,8 +25,8 @@ def get_args():
     parser.add_argument("--gamma", type=float, default=0.99)
     parser.add_argument("--initial_epsilon", type=float, default=1)
     parser.add_argument("--final_epsilon", type=float, default=1e-2)
-    parser.add_argument("--num_decay_epochs", type=float, default=100000)
-    parser.add_argument("--num_epochs", type=int, default=300000)
+    parser.add_argument("--num_decay_epochs", type=float, default=50000)
+    parser.add_argument("--num_epochs", type=int, default=200000)
     parser.add_argument("--save_interval", type=int, default=10000)
     parser.add_argument("--replay_memory_size", type=int, default=102400,
                         help="Number of epoches between testing phases")
@@ -93,7 +93,7 @@ def train(opt):
         batch = sample(replay_memory, min(len(replay_memory), opt.batch_size))
         state_batch, action_batch, reward_batch, next_state_batch, done_batch = zip(*batch)
         state_batch = torch.stack(tuple(state for state in state_batch))
-        action_batch = torch.from_numpy(np.array(reward_batch, dtype=np.int64)[:, None])
+        action_batch = torch.from_numpy(np.array(action_batch, dtype=np.int64)[:, None])
         reward_batch = torch.from_numpy(np.array(reward_batch, dtype=np.float32)[:, None])
         next_state_batch = torch.stack(tuple(state for state in next_state_batch))
 
@@ -103,6 +103,7 @@ def train(opt):
         next_state_batch = next_state_batch.to(device)
 
         q_values = model(state_batch)
+        print(action_batch.reshape(-1))
         q_values = q_values.gather(1, action_batch)
         model.eval()
         with torch.no_grad():
@@ -112,17 +113,9 @@ def train(opt):
         next_prediction_batch = torch.max(next_prediction_batch, 1).values.reshape(-1, 1)
         done_batch = torch.tensor(done_batch).reshape(-1, 1)
 
-        # assert (q_values.shape == next_prediction_batch.shape)
-        # assert (q_values.shape == done_batch.shape)
-        # assert (q_values.shape == reward_batch.shape)
-        # assert (q_values.shape == torch.Size([1024, 1]))
-        # print(reward_batch.reshape(-1))
-        # print(done_batch.reshape(-1))
-        # print(next_prediction_batch.reshape(-1))
         tmp = tuple(reward if done else reward + opt.gamma * prediction for reward, done, prediction in
                     zip(reward_batch, done_batch, next_prediction_batch))
-        # for i in range(len(tmp)):
-        #     assert isinstance(tmp[i], torch.Tensor)
+
         y_batch = torch.cat(tmp)[:, None]
 
         optimizer.zero_grad()
