@@ -27,7 +27,7 @@ def get_args():
     parser.add_argument("--final_epsilon", type=float, default=1e-3)
     parser.add_argument("--num_decay_epochs", type=float, default=50000)
     parser.add_argument("--num_epochs", type=int, default=500000)
-    parser.add_argument("--save_interval", type=int, default=10000)
+    parser.add_argument("--save_interval", type=int, default=20000)
     parser.add_argument("--replay_memory_size", type=int, default=204800,
                         help="Number of epoches between testing phases")
     parser.add_argument("--log_path", type=str, default="tensorboard")
